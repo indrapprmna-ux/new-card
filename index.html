@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>something</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== LAYAR PIN ===== -->
+<section id="lock" aria-label="Masukkan PIN">
+  <h2>I have a secret for you</h2>
+  <p id="hint">Enter your PIN to unlock</p>
+  <div id="dots" aria-hidden="true"></div>
+  <div id="pad"></div>
+  <p id="msg" role="alert"></p>
+</section>
+
+<!-- ===== BUKU ===== -->
+<main id="stage">
+  <div class="wrap">
+    <div id="book">
+      <div class="board l"></div><div class="board r"></div>
+
+      <!-- Daun 0: Cover (belakangnya = halaman kiri pertama) -->
+      <div class="leaf" id="leaf0" style="--k:0">
+        <div class="face front cover">
+          <span class="orn">❦</span><span class="script" id="cvTitle"></span><small id="cvSub"></small><span class="orn">♥ ♥ ♥</span>
+        </div>
+        <div class="face back page"><div class="frame"></div><div class="inner lp"></div></div>
+      </div>
+
+      <!-- Daun 1: Ucapan -->
+      <div class="leaf" style="--k:1">
+        <div class="face front page"><div class="frame"></div><div class="inner">
+          <span class="orn">❦</span><h1 id="gTitle" class="script"></h1><div id="gMsg"></div><span class="orn greet-orn">♥ ♥ ♥</span>
+        </div></div>
+        <div class="face back page"><div class="frame"></div><div class="inner lp"></div></div>
+      </div>
+
+      <!-- Daun 2: Photocard -->
+      <div class="leaf" style="--k:2">
+        <div class="face front page"><div class="frame"></div><div class="inner">
+          <h2 class="h script">kamu inget ini nggak?</h2><p class="sub">dipencet ya</p>
+          <div id="cards"></div><p id="count"></p>
+        </div></div>
+        <div class="face back page"><div class="frame"></div><div class="inner lp"></div></div>
+      </div>
+
+      <!-- Daun 3: Hati -->
+      <div class="leaf" style="--k:3">
+        <div class="face front page"><div class="frame"></div><div class="inner">
+          <h2 class="h script" id="heartTitle"></h2><p class="sub">pencet buat zoom foto</p>
+          <div id="heart"></div>
+        </div></div>
+        <div class="face back page"><div class="frame"></div><div class="inner lp"></div></div>
+      </div>
+
+      <!-- Daun 4: Surat cinta -->
+      <div class="leaf" style="--k:4">
+        <div class="face front page"><div class="frame"></div><div class="inner">
+          <h2 class="h script">Surat Cinta</h2><span class="orn">❦</span>
+          <div class="letter" id="letter" tabindex="0"></div>
+        </div></div>
+        <div class="face back page"></div>
+      </div>
+    </div>
+    <div class="ground"></div>
+  </div>
+  <nav><span id="pg"></span></nav>
+  <div id="tap">Geser untuk membuka buku</div>
+</main>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Foto kenangan">
+  <img src="" alt="Foto kenangan diperbesar">
+  <p></p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
