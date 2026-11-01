@@ -227,8 +227,23 @@ function go(d){
   setTimeout(() => enter(n), 700);
 }
 let touchStartX = null;
+let letterTouchY = null;
+const letter = $('#letter');
+letter.addEventListener('touchstart', e => {
+  letterTouchY = e.touches.length === 1 ? e.touches[0].clientY : null;
+}, {passive: true});
+letter.addEventListener('touchmove', e => {
+  if (letterTouchY === null || e.touches.length !== 1) return;
+  const touchY = e.touches[0].clientY;
+  letter.scrollTop += letterTouchY - touchY;
+  letterTouchY = touchY;
+  e.preventDefault();
+}, {passive: false});
+const endLetterTouch = () => { letterTouchY = null; };
+letter.addEventListener('touchend', endLetterTouch, {passive: true});
+letter.addEventListener('touchcancel', endLetterTouch, {passive: true});
 $('#stage').addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].clientX;
+  touchStartX = e.target.closest('#letter') ? null : e.changedTouches[0].clientX;
 }, {passive: true});
 $('#stage').addEventListener('touchend', e => {
   if (touchStartX === null) return;
