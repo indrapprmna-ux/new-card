@@ -123,7 +123,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 @keyframes in{from{opacity:0;transform:scale(.1) rotate(-40deg)}to{opacity:1;transform:rotate(var(--r))}}
 
 /* hal 4: surat antik */
-.letter{flex:1 1 0;min-height:0;width:100%;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scroll-behavior:smooth;margin-top:.6em;padding:.6em .8em;border-radius:6px;font-family:var(--script);font-weight:500;font-size:1.3em;line-height:1.7;color:#3d2118;
+.letter{flex:1 1 0;min-height:0;width:100%;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scroll-behavior:auto;margin-top:.6em;padding:.6em .8em;border-radius:6px;font-family:var(--script);font-weight:500;font-size:1.3em;line-height:1.7;color:#3d2118;
   background:repeating-linear-gradient(to bottom,transparent 0 calc(1.7em - 1px),rgba(140,90,40,.3) calc(1.7em - 1px) 1.7em),linear-gradient(160deg,#f6e6c4,#ebd09b);
   background-attachment:local,scroll;box-shadow:inset 0 0 28px rgba(120,70,20,.4),0 2px 6px rgba(0,0,0,.25);scrollbar-width:thin;scrollbar-color:var(--rose) transparent}
 .letter p{margin:0}
