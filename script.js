@@ -59,7 +59,7 @@ const CONFIG = {
 /* ===================================================== */
 
 const $ = s => document.querySelector(s);
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const sleep = ms => new Promise(r => setTimeout(r, ms));  document.addEventListener('pointerdown', event => {   if (event.pointerType === 'mouse' && event.button !== 0) return;    const heart = document.createElement('span');   heart.className = 'touch-heart';   heart.textContent = '♥';   heart.style.left = `${event.clientX}px`;   heart.style.top = `${event.clientY}px`;   heart.style.setProperty('--drift', `${Math.random() * 36 - 18}px`);   heart.style.setProperty('--rotation', `${Math.random() * 36 - 18}deg`);   document.body.appendChild(heart);   heart.addEventListener('animationend', () => heart.remove(), {once: true}); });
 
 /* ---------- Isi teks dari CONFIG ---------- */
 $('#cvTitle').textContent = CONFIG.coverTitle;
