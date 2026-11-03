@@ -1,4 +1,4 @@
-/* =====================================================
+ /* =====================================================
    PENGATURAN — EDIT BAGIAN INI UNTUK MENGGANTI ISI
    ===================================================== */
 const CONFIG = {
@@ -6,7 +6,7 @@ const CONFIG = {
   pinHint: "december",                                // ← petunjuk di layar PIN (kosongkan jika tak perlu)
 
   // ← GANTI dengan URL MP3 romantis kamu (atau file lokal, mis. "lagu.mp3" di folder yang sama)
-  musicUrl: "lagu.mp3",
+  musicUrl: "lagu1.mp3", musicStartTime: 100,
 
   coverTitle: "For My Dear",               // ← teks di cover
   coverSub: "i have something to tell you",  // ← teks di cover
@@ -177,7 +177,7 @@ document.addEventListener('keydown', e => {
 });
 
 function unlock(){
-  audio.play().catch(() => {});                // dipanggil dari ketukan pengguna → musik boleh langsung main
+  if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) { audio.currentTime = CONFIG.musicStartTime; } else { audio.addEventListener('loadedmetadata', () => { audio.currentTime = CONFIG.musicStartTime; }, {once: true}); } audio.play().catch(error => console.error('Tidak dapat memulai musik.', error));                // dipanggil dari ketukan pengguna → musik boleh langsung main
   $('#lock').classList.add('gone');
   $('#stage').classList.add('on');
   $('#tap').textContent = matchMedia('(pointer: coarse)').matches
