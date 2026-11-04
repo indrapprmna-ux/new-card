@@ -1,4 +1,4 @@
- /* =====================================================
+/* =====================================================
    PENGATURAN — EDIT BAGIAN INI UNTUK MENGGANTI ISI
    ===================================================== */
 const CONFIG = {
@@ -6,7 +6,8 @@ const CONFIG = {
   pinHint: "december",                                // ← petunjuk di layar PIN (kosongkan jika tak perlu)
 
   // ← GANTI dengan URL MP3 romantis kamu (atau file lokal, mis. "lagu.mp3" di folder yang sama)
-  musicUrl: "lagu1.mp3", musicStartTime: 100,
+  musicUrl: "lagu1.mp3",
+  musicStartTime: 100,
 
   coverTitle: "For My Dear",               // ← teks di cover
   coverSub: "i have something to tell you",  // ← teks di cover
@@ -59,7 +60,21 @@ const CONFIG = {
 /* ===================================================== */
 
 const $ = s => document.querySelector(s);
-const sleep = ms => new Promise(r => setTimeout(r, ms));  document.addEventListener('pointerdown', event => {   if (event.pointerType === 'mouse' && event.button !== 0) return;    const heart = document.createElement('span');   heart.className = 'touch-heart';   heart.textContent = '♥';   heart.style.left = `${event.clientX}px`;   heart.style.top = `${event.clientY}px`;   heart.style.setProperty('--drift', `${Math.random() * 36 - 18}px`);   heart.style.setProperty('--rotation', `${Math.random() * 36 - 18}deg`);   document.body.appendChild(heart);   heart.addEventListener('animationend', () => heart.remove(), {once: true}); });
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+document.addEventListener('pointerdown', event => {
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+  const heart = document.createElement('span');
+  heart.className = 'touch-heart';
+  heart.textContent = '♥';
+  heart.style.left = `${event.clientX}px`;
+  heart.style.top = `${event.clientY}px`;
+  heart.style.setProperty('--drift', `${Math.random() * 36 - 18}px`);
+  heart.style.setProperty('--rotation', `${Math.random() * 36 - 18}deg`);
+  document.body.appendChild(heart);
+  heart.addEventListener('animationend', () => heart.remove(), {once: true});
+});
 
 /* ---------- Isi teks dari CONFIG ---------- */
 $('#cvTitle').textContent = CONFIG.coverTitle;
@@ -74,7 +89,49 @@ document.querySelectorAll('.lp').forEach((el, i) => {
 
 /* ---------- Musik ---------- */
 const audio = new Audio(CONFIG.musicUrl);
-audio.loop = true; audio.volume = .4;
+audio.loop = true;
+audio.volume = .4;
+audio.preload = 'auto';
+const musicToggle = $('#musicToggle');
+let musicFailed = false;
+function syncMusicToggle(){
+  const playing = !audio.paused && !audio.ended;
+  const label = musicFailed ? '♫ Coba lagi' : playing ? '♫ Jeda musik' : '♫ Putar musik';
+  musicToggle.textContent = label;
+  musicToggle.setAttribute('aria-label', musicFailed ? 'Coba putar musik lagi' : playing ? 'Jeda musik' : 'Putar musik');
+  musicToggle.setAttribute('aria-pressed', String(playing));
+}
+audio.addEventListener('play', syncMusicToggle);
+audio.addEventListener('pause', syncMusicToggle);
+audio.addEventListener('ended', syncMusicToggle);
+audio.addEventListener('error', () => {
+  musicFailed = true;
+  console.error('File musik tidak dapat dimuat.', audio.error);
+  syncMusicToggle();
+});
+function startMusic(){
+  if (audio.error) audio.load();
+  musicFailed = false;
+  const seekToStartTime = () => {
+    if (!Number.isFinite(audio.duration)) return;
+    audio.currentTime = Math.min(CONFIG.musicStartTime, Math.max(0, audio.duration - 1));
+  };
+  if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) {
+    seekToStartTime();
+  } else {
+    audio.addEventListener('loadedmetadata', seekToStartTime, {once: true});
+  }
+  return audio.play().then(syncMusicToggle).catch(error => {
+    console.error('Tidak dapat memulai musik.', error);
+    musicFailed = true;
+    syncMusicToggle();
+  });
+}
+musicToggle.addEventListener('click', event => {
+  event.stopPropagation();
+  if (audio.paused || audio.ended) startMusic();
+  else audio.pause();
+});
 let soundContext;
 function playFeedbackSound(type){
   if (!window.AudioContext) return;
@@ -177,7 +234,7 @@ document.addEventListener('keydown', e => {
 });
 
 function unlock(){
-  if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) { audio.currentTime = CONFIG.musicStartTime; } else { audio.addEventListener('loadedmetadata', () => { audio.currentTime = CONFIG.musicStartTime; }, {once: true}); } audio.play().catch(error => console.error('Tidak dapat memulai musik.', error));                // dipanggil dari ketukan pengguna → musik boleh langsung main
+  startMusic(); // dipanggil dari ketukan pengguna
   $('#lock').classList.add('gone');
   $('#stage').classList.add('on');
   $('#tap').textContent = matchMedia('(pointer: coarse)').matches
@@ -196,7 +253,9 @@ async function openBook(){
   enter(1);
 }
 $('#stage').addEventListener('click', e => {
-  if (!matchMedia('(pointer: fine)').matches) return;
+  const fine = matchMedia('(pointer: fine)').matches;
+  if (!fine && phase === 'open' && cur === N - 1 && e.target.closest('#book') && !e.target.closest('button, .letter')) { startFinale(); return; }   // HP: ketuk buku di halaman terakhir
+  if (!fine) return;
   if (phase === 'closed') {
     openBook();
     return;
@@ -221,9 +280,11 @@ function setCur(n){
 leaves.forEach((l, i) => l.style.zIndex = N - i);
 function go(d){
   const n = cur + d;
+  if (phase === 'open' && cur === N - 1 && d > 0) { startFinale(); return; }   // halaman terakhir → tutup buku
   if (phase !== 'open' || n < 1 || n > N - 1) return;
   playFeedbackSound('page');
   setCur(n);
+  if (n < N - 1) $('#tap').classList.add('hide');
   setTimeout(() => enter(n), 700);
 }
 let touchStartX = null;
@@ -243,7 +304,11 @@ const endLetterTouch = () => { letterTouchY = null; };
 letter.addEventListener('touchend', endLetterTouch, {passive: true});
 letter.addEventListener('touchcancel', endLetterTouch, {passive: true});
 $('#stage').addEventListener('touchstart', e => {
-  touchStartX = e.target.closest('#letter') ? null : e.changedTouches[0].clientX;
+  if (e.target.closest('#letter')) {
+    touchStartX = null;
+    return;
+  }
+  touchStartX = e.changedTouches[0].clientX;
 }, {passive: true});
 $('#stage').addEventListener('touchend', e => {
   if (touchStartX === null) return;
@@ -258,6 +323,7 @@ setCur(0);
 /* ---------- Animasi masuk tiap halaman (sekali saja) ---------- */
 const seen = {};
 function enter(p){
+  if (p === 4) { $('#tap').textContent = 'Ketuk buku untuk menutupnya'; $('#tap').classList.remove('hide'); }
   if (seen[p]) return; seen[p] = 1;
   if (p === 1) greeting();
   if (p === 2) $('#cards').classList.add('show');

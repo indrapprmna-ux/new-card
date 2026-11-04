@@ -7,14 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="finale.css?v=1">
 </head>
 <body>
 
 <!-- ===== LAYAR PIN ===== -->
 <section id="lock" aria-label="Masukkan PIN">
   <h2>I have a secret for you</h2>
-  <p id="hint">Enter your PIN to unlock</p>
+  <p id="hint">Enter your pin to unlock</p>
   <div id="dots" aria-hidden="true"></div>
   <div id="pad"></div>
   <p id="msg" role="alert"></p>
@@ -54,17 +55,18 @@
       <!-- Daun 3: Hati -->
       <div class="leaf" style="--k:3">
         <div class="face front page"><div class="frame"></div><div class="inner">
-          <h2 class="h script" id="heartTitle"></h2><p class="sub">pencet buat zoom fotonya</p>
+          <h2 class="h script" id="heartTitle"></h2><p class="sub">pencet buat zoom foto</p>
           <div id="heart"></div>
         </div></div>
         <div class="face back page"><div class="frame"></div><div class="inner lp"></div></div>
       </div>
 
-      <!-- Daun 4: Pesan Terakhirku -->
+      <!-- Daun 4: Surat cinta -->
       <div class="leaf" style="--k:4">
         <div class="face front page"><div class="frame"></div><div class="inner">
           <h2 class="h script">Pesan Terakhirku</h2><span class="orn">❦</span>
           <div class="letter" id="letter" tabindex="0"></div>
+          <button class="close-book" id="closeBook" type="button">tutup buku ♥</button>
         </div></div>
         <div class="face back page"></div>
       </div>
@@ -73,6 +75,7 @@
   </div>
   <nav><span id="pg"></span></nav>
   <div id="tap">Geser untuk membuka buku</div>
+  <button id="musicToggle" type="button" aria-label="Putar musik" aria-pressed="false">♫ Putar musik</button>
 </main>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Foto kenangan">
@@ -80,6 +83,7 @@
   <p></p>
 </div>
 
-<script src="script.js?v=4"></script>
+<script src="script.js"></script>
+<script src="finale.js"></script>
 </body>
 </html>
